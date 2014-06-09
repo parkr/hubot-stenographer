@@ -72,7 +72,7 @@ class HistoryEntry
     querystring.stringify({
       access_token: process.env.HUBOT_LOG_SERVER_TOKEN,
       room:         @room,
-      text:         @message,
+      message:      @message,
       author:       @name,
       time:         @time.toUTCString()
     })
