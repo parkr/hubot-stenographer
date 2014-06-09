@@ -44,7 +44,7 @@ sendEventToServer = (event) ->
   log("SENDING MESSAGE TO #{process.env.HUBOT_LOG_SERVER_HOST}...")
   data = event.queryString()
   try
-    log("Logging that #{event.name} said '#{event.message} at #{event.time.toUTCString()} in #{room}'")
+    log("Logging that #{event.name} said '#{event.message} at #{event.time.toUTCString()} in #{event.room}'")
     req = http.request httpOptsForData(data), responseHandler
     req.on 'error', errorHandler
     req.write(data)
