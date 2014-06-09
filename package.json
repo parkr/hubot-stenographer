@@ -1,6 +1,6 @@
 {
   "name": "hubot-stenog",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "A Witness-compliant Hubot logger.",
   "main": "index.coffee",
   "scripts": {
