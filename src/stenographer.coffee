@@ -39,6 +39,7 @@ responseHandler = (res) ->
 errorHandler = (error) ->
   log("error!!!")
   console.error(error)
+  console.error(error.stack)
 
 sendEventToServer = (event) ->
   log("SENDING MESSAGE TO #{process.env.HUBOT_LOG_SERVER_HOST}...")
