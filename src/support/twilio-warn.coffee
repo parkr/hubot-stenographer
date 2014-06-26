@@ -28,9 +28,12 @@ sendMessage = (client, to, from, body) ->
   client.messages.create
     to: to,
     from: from,
-    body: bodyk
+    body: body
   , (err, message) ->
-    log("problem sending #{message.sid}")
+    if err
+      log("problem sending #{message.sid}")
+    else
+      log("message #{message.sid} sent successfully.")
 
 newClient = ->
   require('twilio')(accountSid, authToken)
@@ -45,4 +48,4 @@ else
   log("not enabled :(")
   module.exports =
     warn: (message) ->
-      "NOPE."
+      log("not enabled, was supposed to send: #{message}")
