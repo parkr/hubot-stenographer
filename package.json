@@ -24,5 +24,8 @@
   "bugs": {
     "url": "https://github.com/parkr/hubot-stenog/issues"
   },
-  "homepage": "https://github.com/parkr/hubot-stenog"
+  "homepage": "https://github.com/parkr/hubot-stenog",
+  "dependencies": {
+    "twilio": "^1.6.0"
+  }
 }
