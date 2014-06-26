@@ -1,6 +1,6 @@
 {
   "name": "hubot-stenog",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A Witness-compliant Hubot logger.",
   "main": "index.coffee",
   "scripts": {
@@ -17,7 +17,9 @@
     "hubot-stenog",
     "hubot-stenographer",
     "hubot-witness",
-    "witness"
+    "witness",
+    "twilio",
+    "warnings"
   ],
   "author": "Parker Moore",
   "license": "MIT",
