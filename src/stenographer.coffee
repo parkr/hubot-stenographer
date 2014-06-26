@@ -13,6 +13,10 @@
 
 http        = require('http')
 querystring = require('querystring')
+twilio      = require('./support/twilio-warn')
+
+warn = ->
+  twilio.warn "gossip server DOWN at #{new Date()}"
 
 log = (msg) ->
   console.log("[stenog] #{msg}")
@@ -32,11 +36,13 @@ httpOptsForData = (data) ->
   }
 
 responseHandler = (res) ->
+  warn() unless res.statusCode is 200
   res.setEncoding('utf8')
   res.on 'data', (chunk) ->
     log("Response: #{chunk}")
 
 errorHandler = (error) ->
+  warn()
   log("error!!!")
   console.error(error)
   console.error(error.stack)
@@ -78,6 +84,14 @@ class HistoryEntry
     })
 
 module.exports = (robot) ->
+  robot.respond /ping/i, (msg) ->
+    if msg.message.user.id is "parkr"
+      msg.send "Sending the warn message."
+      twilio.warn "PING from IRC. Ohai."
+      msg.send "Oh, hey parkr. How are you doing today?"
+    else
+      msg.send "What do I look like to you... a robot?"
+
   robot.hear /(.*)/i, (msg) ->
     historyentry = new HistoryEntry(msg.message.room, msg.message.user.name, msg.match[1])
     storeMessage(historyentry)
