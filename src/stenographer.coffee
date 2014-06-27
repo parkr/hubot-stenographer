@@ -18,6 +18,9 @@ twilio      = require('./support/twilio-warn')
 warn = ->
   twilio.warn "gossip server DOWN at #{new Date()}"
 
+reportStatusCode = (code) ->
+  twilio.warn "Got an errant #{code} from gossip server at #{new Date()}"
+
 log = (msg) ->
   console.log("[stenog] #{msg}")
 
@@ -36,7 +39,8 @@ httpOptsForData = (data) ->
   }
 
 responseHandler = (res) ->
-  warn() unless res.statusCode is 200
+  log("Handling a #{res.statusCode} from the gossip server.")
+  reportStatusCode(code) for code in [500, 502] when code is res.statusCode
   res.setEncoding('utf8')
   res.on 'data', (chunk) ->
     log("Response: #{chunk}")
