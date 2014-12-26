@@ -22,7 +22,7 @@ reportStatusCode = (code) ->
   twilio.warn "Got an errant #{code} from gossip server at #{new Date()}"
 
 log = (msg) ->
-  console.log("[stenog] #{msg}")
+  console.log("[stenog]", msg)
 
 isEnabled = ->
   process.env.HUBOT_LOG_SERVER_TOKEN? and process.env.HUBOT_LOG_SERVER_HOST?
@@ -91,7 +91,7 @@ module.exports = (robot) ->
   robot.respond /ping/i, (msg) ->
     if msg.message.user.id is "parkr"
       msg.send "Sending the warn message."
-      twilio.warn "PING from IRC. Ohai."
+      twilio.warn "You just pinged yourself from IRC. Well done."
       msg.send "Oh, hey parkr. How are you doing today?"
     else
       msg.send "What do I look like to you... a robot?"

@@ -19,7 +19,7 @@ notifyTo   = process.env.HUBOT_TWILIO_WARN_TO
 notifyFrom = process.env.HUBOT_TWILIO_WARN_FROM
 
 log = (message) ->
-  console.log("twilio:", message)
+  console.log("[stenog] twilio:", message)
 
 isEnabled = ->
   accountSid? and authToken? and notifyTo? and notifyFrom?
