@@ -15,6 +15,10 @@ http        = require('http')
 querystring = require('querystring')
 twilio      = require('./support/twilio-warn')
 
+config =
+  host: process.env.HUBOT_LOG_SERVER_HOST,
+  port: parseInt(process.env.HUBOT_LOG_SERVER_PORT ? 443)
+
 warn = ->
   twilio.warn "gossip server DOWN at #{new Date()}"
 
@@ -29,8 +33,8 @@ isEnabled = ->
 
 httpOptsForData = (data) ->
   {
-    host: process.env.HUBOT_LOG_SERVER_HOST,
-    port: 443,
+    host: config.host,
+    port: config.port,
     path: "/api/messages/log",
     method: 'POST',
     headers:

@@ -13,6 +13,7 @@ appropriate adjustments for other hosting solutions.
 ```bash
 $ npm install --save hubot-stenographer
 $ hk set HUBOT_LOG_SERVER_HOST="witness.yourdomain.com"
+$ hk set HUBOT_LOG_SERVER_PORT=443
 $ hk set HUBOT_LOG_SERVER_TOKEN="supersecrettoavoidspam"
 $ vim external-scripts.json # add "hubot-stenographer" to the array
 ```
