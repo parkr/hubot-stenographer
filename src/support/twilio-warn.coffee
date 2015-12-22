@@ -19,7 +19,7 @@ notifyTo   = process.env.HUBOT_TWILIO_WARN_TO
 notifyFrom = process.env.HUBOT_TWILIO_WARN_FROM
 
 log = (message) ->
-  console.log("[stenog] twilio:", message)
+  console.log("stenog: twilio:", message)
 
 isEnabled = ->
   accountSid? and authToken? and notifyTo? and notifyFrom?
@@ -30,11 +30,8 @@ sendMessage = (client, to, from, body) ->
     from: from,
     body: body
   , (err, message) ->
-    log("received from twilio:")
-    log(err)
-    log(message)
     if err
-      log("problem sending #{message.sid}")
+      log("problem sending message: #{err.status} #{err.message}")
     else
       log("message #{message.sid} sent successfully.")
 
