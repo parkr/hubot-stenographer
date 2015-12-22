@@ -11,13 +11,15 @@
 # Author:
 #   Parker Moore (@parkr)
 
-http        = require('http')
-querystring = require('querystring')
-twilio      = require('./support/twilio-warn')
+HistoryEntry  = require('./support/history-entry')
+WitnessServer = require('./support/witness-server')
+twilio        = require('./support/twilio-warn')
 
-config =
-  host: process.env.HUBOT_LOG_SERVER_HOST,
-  port: parseInt(process.env.HUBOT_LOG_SERVER_PORT ? 443)
+witness = new WitnessServer \
+  process.env.HUBOT_LOG_SERVER_HOST,
+  process.env.HUBOT_LOG_SERVER_PORT,
+  process.env.HUBOT_SERVER_TOKEN,
+  errHandler
 
 warn = ->
   twilio.warn "gossip server DOWN at #{new Date()}"
@@ -25,72 +27,19 @@ warn = ->
 reportStatusCode = (code) ->
   twilio.warn "Got an errant #{code} from gossip server at #{new Date()}"
 
-log = (msg) ->
-  console.log("[stenog]", msg)
-
-isEnabled = ->
-  process.env.HUBOT_LOG_SERVER_TOKEN? and process.env.HUBOT_LOG_SERVER_HOST?
-
-httpOptsForData = (data) ->
-  {
-    host: config.host,
-    port: config.port,
-    path: "/api/messages/log",
-    method: 'POST',
-    headers:
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Content-Length': data.length
-  }
-
-responseHandler = (res) ->
-  code = res.statusCode
-  log("Handling a #{code} from the gossip server.")
-  reportStatusCode(code) if code < 200 or code > 299
-  res.setEncoding('utf8')
-  res.on 'data', (chunk) ->
-    log("Response: #{chunk}")
-
-errorHandler = (error) ->
+errHandler = (err, code) ->
   warn()
-  log("error!!!")
-  console.error(error)
-  console.error(error.stack)
-
-sendEventToServer = (event) ->
-  log("SENDING MESSAGE TO #{process.env.HUBOT_LOG_SERVER_HOST}...")
-  data = event.queryString()
-  try
-    log("Logging that #{event.name} said '#{event.message}' at #{event.time.toUTCString()} in #{event.room}")
-    req = http.request httpOptsForData(data), responseHandler
-    req.on 'error', errorHandler
-    req.write(data)
-    req.end()
-  catch e
-    errorHandler(e)
+  reportStatusCode(code)
+  if err?
+    console.log(err, err.stack)
 
 storeMessage = (event) ->
-  if isEnabled()
+  if witness.isEnabled()
     process.nextTick ->
-      sendEventToServer(event)
+      witness.send event
   else
-    console.log("Logging isn't enabled. Make sure you've set the proper environment variables!")
-
-class HistoryEntry
-  constructor: (@room, @name, @message) ->
-    @time = new Date()
-    @hours = @time.getHours()
-    @minutes = @time.getMinutes()
-    if @minutes < 10
-      @minutes = '0' + @minutes
-
-  queryString: ->
-    querystring.stringify({
-      access_token: process.env.HUBOT_LOG_SERVER_TOKEN,
-      room:         @room,
-      message:      @message,
-      author:       @name,
-      time:         @time.toUTCString()
-    })
+    console.log("Logging isn't enabled. " +
+      "Make sure you've set the proper environment variables!")
 
 module.exports = (robot) ->
   robot.respond /ping/i, (msg) ->
@@ -102,5 +51,9 @@ module.exports = (robot) ->
       msg.send "What do I look like to you... a robot?"
 
   robot.hear /(.*)/i, (msg) ->
-    historyentry = new HistoryEntry(msg.message.room, msg.message.user.name, msg.match[1])
-    storeMessage(historyentry)
+    event = new HistoryEntry(
+      msg.message.room,
+      msg.message.user.name,
+      msg.match[1]
+    )
+    storeMessage event
