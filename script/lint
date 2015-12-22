@@ -1,2 +1,4 @@
 #!/bin/bash
+set -e
 NODE_ENV=test find ./src -name '*.coffee' | xargs ./node_modules/.bin/coffeelint
+NODE_ENV=test find ./test -name '*.coffee' | xargs ./node_modules/.bin/coffeelint
