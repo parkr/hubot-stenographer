@@ -41,7 +41,7 @@ class WitnessServer
     data = event.queryString()
     try
       @log("Logging that #{event.toString()}")
-      req = http.request httpOptsForData(data), @handle
+      req = @http.request @httpOpts(data), @handle
       req.on 'error', errhandler
       req.write(data)
       req.end()
