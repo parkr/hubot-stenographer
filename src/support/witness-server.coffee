@@ -19,7 +19,7 @@ class WitnessServer
 
   httpOpts: (data) ->
     {
-      protocol: @proto,
+      protocol: "#{@proto}:",
       host:     @host,
       port:     @port,
       path:     "/api/messages/log",
