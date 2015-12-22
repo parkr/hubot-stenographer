@@ -8,12 +8,13 @@ class WitnessServer
   constructor: (@host, @port, @token, @error) ->
     @port = parseInt(@port)
     @http = require(if @port == 443 then 'https' else 'http')
+    @logger = console
 
   isEnabled: ->
     @token? and @host? and @token != "" and @host != ""
 
   log: (message) ->
-    console.log("stenog:", msg)
+    @logger.log("stenog:", message)
 
   httpOpts: (data) ->
     {

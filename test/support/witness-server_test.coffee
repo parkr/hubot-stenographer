@@ -6,6 +6,10 @@ describe "Witness Server", ->
   token  = "abc123"
   error  = (err, code) -> console.log(err, code)
   server = new WitnessServer(host, port, token, error)
+  logger =
+    messages: []
+    log: (msgs...) ->
+      @messages.push(msgs.join(' '))
 
   describe "constructor", ->
     it "sets host, port, token, and error handler", ->
@@ -37,6 +41,12 @@ describe "Witness Server", ->
 
     it "returns true if a token and host is present", ->
       assert.ok server.isEnabled()
+
+  describe "log", ->
+    server.logger = logger
+    it "should work", ->
+      server.log("hi")
+      assert.equal "stenog: hi", server.logger.messages[0]
 
   describe "httpOpts", ->
     it "returns a hash with the proper content-type and -length headers", ->
