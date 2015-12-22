@@ -30,6 +30,9 @@ sendMessage = (client, to, from, body) ->
     from: from,
     body: body
   , (err, message) ->
+    log("received from twilio:")
+    log(err)
+    log(message)
     if err
       log("problem sending #{message.sid}")
     else
