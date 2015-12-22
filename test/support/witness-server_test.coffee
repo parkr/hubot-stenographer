@@ -4,7 +4,7 @@ describe "Witness Server", ->
   host   = "localhost"
   port   = "8080"
   token  = "abc123"
-  error  = (err, code) -> console.log(err, code)
+  error  = (err, code) -> @logger.log(err, code)
   server = new WitnessServer(host, port, token, error)
   logger =
     messages: []
@@ -17,7 +17,7 @@ describe "Witness Server", ->
       assert.equal port, server.port
       assert.equal token, server.token
       assert.isNumber server.port
-      assert.isFunction server.error
+      assert.isFunction server.err
 
     it "requires the http module if non-443 port", ->
       assert.equal require("http"), server.http

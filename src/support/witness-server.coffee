@@ -5,7 +5,7 @@
 #   Parker Moore (@parkr)
 
 class WitnessServer
-  constructor: (@host, @port, @token, @error) ->
+  constructor: (@host, @port, @token, @err) ->
     @port = parseInt(@port)
     @http = require(if @port == 443 then 'https' else 'http')
     @logger = console
@@ -30,13 +30,13 @@ class WitnessServer
   handle: (res) ->
     code = res.statusCode
     log("Handling a #{code} from the gossip server.")
-    @error(null, code) if code < 200 or code > 299
+    @err(null, code) if code < 200 or code > 299
     res.setEncoding('utf8')
     res.on 'data', (chunk) ->
       log("Response: #{chunk}")
 
   send: (event) ->
-    errhandler = @error
+    errhandler = @err
     @log "Sending message to #{@host}:#{@port}..."
     data = event.queryString()
     try

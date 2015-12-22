@@ -6,6 +6,7 @@
 #
 # Configuration:
 #   HUBOT_LOG_SERVER_HOST
+#   HUBOT_LOG_SERVER_PORT
 #   HUBOT_LOG_SERVER_TOKEN
 #
 # Author:
@@ -14,12 +15,6 @@
 HistoryEntry  = require('./support/history-entry')
 WitnessServer = require('./support/witness-server')
 twilio        = require('./support/twilio-warn')
-
-witness = new WitnessServer \
-  process.env.HUBOT_LOG_SERVER_HOST,
-  process.env.HUBOT_LOG_SERVER_PORT,
-  process.env.HUBOT_LOG_SERVER_TOKEN,
-  errHandler
 
 warn = ->
   twilio.warn "gossip server DOWN at #{new Date()}"
@@ -32,6 +27,12 @@ errHandler = (err, code) ->
   reportStatusCode(code)
   if err?
     console.log(err, err.stack)
+
+witness = new WitnessServer \
+  process.env.HUBOT_LOG_SERVER_HOST,
+  process.env.HUBOT_LOG_SERVER_PORT,
+  process.env.HUBOT_LOG_SERVER_TOKEN,
+  errHandler
 
 storeMessage = (event) ->
   if witness.isEnabled()
