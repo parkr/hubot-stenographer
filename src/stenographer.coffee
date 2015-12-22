@@ -39,8 +39,9 @@ httpOptsForData = (data) ->
   }
 
 responseHandler = (res) ->
-  log("Handling a #{res.statusCode} from the gossip server.")
-  reportStatusCode(code) for code in [500, 502] when code is res.statusCode
+  code = res.statusCode
+  log("Handling a #{code} from the gossip server.")
+  reportStatusCode(code) if code < 200 or code > 299
   res.setEncoding('utf8')
   res.on 'data', (chunk) ->
     log("Response: #{chunk}")
