@@ -29,18 +29,18 @@ class WitnessServer
 
   handle: (res) ->
     code = res.statusCode
-    log("Handling a #{code} from the gossip server.")
+    @log("Handling a #{code} from the gossip server.")
     @err(null, code) if code < 200 or code > 299
     res.setEncoding('utf8')
     res.on 'data', (chunk) ->
-      log("Response: #{chunk}")
+      @log("Response: #{chunk}")
 
   send: (event) ->
     errhandler = @err
     @log "Sending message to #{@host}:#{@port}..."
     data = event.queryString()
     try
-      log("Logging that #{event.toString()}")
+      @log("Logging that #{event.toString()}")
       req = http.request httpOptsForData(data), @handle
       req.on 'error', errhandler
       req.write(data)
