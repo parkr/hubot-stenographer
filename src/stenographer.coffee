@@ -30,7 +30,7 @@ isEnabled = ->
 httpOptsForData = (data) ->
   {
     host: process.env.HUBOT_LOG_SERVER_HOST,
-    port: 80,
+    port: 443,
     path: "/api/messages/log",
     method: 'POST',
     headers:
