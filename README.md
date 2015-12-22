@@ -5,6 +5,8 @@ Let Hubot write down all messages it hears on a [Witness][]-compliant server.
 
 [Witness]: https://github.com/parkr/witness
 
+[![Build Status](https://travis-ci.org/parkr/hubot-stenographer.svg?branch=master)](https://travis-ci.org/parkr/hubot-stenographer)
+
 ### Installation
 
 These instructions assume you've deployed Hubot to Heroku. Please make the
