@@ -18,7 +18,7 @@ twilio        = require('./support/twilio-warn')
 witness = new WitnessServer \
   process.env.HUBOT_LOG_SERVER_HOST,
   process.env.HUBOT_LOG_SERVER_PORT,
-  process.env.HUBOT_SERVER_TOKEN,
+  process.env.HUBOT_LOG_SERVER_TOKEN,
   errHandler
 
 warn = ->
