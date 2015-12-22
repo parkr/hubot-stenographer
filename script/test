@@ -1,0 +1,4 @@
+#!/bin/bash
+set -e
+script/smoke-test
+NODE_ENV=test ./node_modules/.bin/mocha test/**/*_test.coffee

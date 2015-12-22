@@ -1,0 +1,2 @@
+#!/bin/bash
+NODE_ENV=test find ./src -name '*.coffee' | xargs ./node_modules/.bin/coffeelint
