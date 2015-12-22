@@ -9,7 +9,7 @@ cd $(dirname "$0")/..
 
 # Make sure the darn thing works
 
-npm update && script/smoke-test
+npm update && script/cibuild
 
 # Make sure we're on the master branch.
 
