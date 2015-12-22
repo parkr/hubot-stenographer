@@ -51,7 +51,6 @@ class WitnessServer
       req = @http.request @httpOpts(data), @handler(callback).bind(this)
       req.on 'error', (err) ->
         errhandler(err, -1, callback)
-      req.on 'end', callback if callback?
       req.write(data)
       req.end()
     catch err

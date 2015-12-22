@@ -1,7 +1,9 @@
 nock = require('nock')
 chai = require('chai')
-WitnessServer = require(require("path").join("..", "..", "src", "support", "witness-server"))
-HistoryEntry  = require(require("path").join("..", "..", "src", "support", "history-entry"))
+Path          = require("path")
+rootDir       = Path.join("..", "..")
+HistoryEntry  = require(Path.join(rootDir, "src", "support", "history-entry"))
+WitnessServer = require(Path.join(rootDir, "src", "support", "witness-server"))
 
 nock.disableNetConnect()
 
@@ -9,8 +11,9 @@ describe "Witness Server", ->
   host   = "localhost"
   port   = "8080"
   token  = "abc123"
-  error  = (err, code) ->
+  error  = (err, code, callback) ->
     if err instanceof chai.AssertionError
+      callback(err)
       throw err
     else
       logger.log(err, code)
@@ -68,8 +71,9 @@ describe "Witness Server", ->
       assert.equal opts.port, server.port
       assert.equal opts.path, "/api/messages/log"
       assert.equal opts.method, "POST"
-      assert.equal opts.headers['Content-Type'], "application/x-www-form-urlencoded"
-      assert.equal opts.headers['Content-Length'], 8
+      assert.deepEqual opts.headers,
+        'Content-Type': "application/x-www-form-urlencoded",
+        'Content-Length': 8
 
   describe "handle", ->
     fakeRes = null
@@ -90,13 +94,16 @@ describe "Witness Server", ->
 
     it "logs the code", ->
       server.handle(fakeRes)
-      assert.equal "stenog: Handling a 201 from the gossip server.", logger.messages[0]
+      assert.equal 2, logger.messages.length
+      assert.include logger.messages,
+        "stenog: Handling a 201 from the gossip server."
 
     it "fires the error code if bad status code", ->
       fakeRes.statusCode = 502
       server.handle(fakeRes)
       # From @log call
-      assert.include logger.messages, "stenog: Handling a 502 from the gossip server."
+      assert.include logger.messages,
+        "stenog: Handling a 502 from the gossip server."
       # From our error handler
       assert.include logger.messages, " 502"
 
@@ -111,21 +118,23 @@ describe "Witness Server", ->
     event = new HistoryEntry(room, user, msg)
 
     stubReq = (handler) ->
-      nock('http://localhost:8080')
+      nock("http://#{host}:#{port}")
         .post('/api/messages/log')
 
     it "acts normally with a happy reply", (done) ->
       nockReq = stubReq().reply(201)
       server.send event, (err) ->
         nockReq.done()
-        assert.include logger.messages, "stenog: Sending message to localhost:8080..."
-        assert.include logger.messages, "stenog: Handling a 201 from the gossip server."
+        assert.include logger.messages,
+          "stenog: Sending message to localhost:8080..."
+        assert.include logger.messages,
+          "stenog: Handling a 201 from the gossip server."
         done()
 
     it "sends handles errors", (done) ->
       nockReq = stubReq().reply(502)
       server.send event, ->
         nockReq.done()
-        console.log logger.messages
-        assert.include logger.messages, "stenog: Handling a 502 from the gossip server."
+        assert.include logger.messages,
+          "stenog: Handling a 502 from the gossip server."
         done()

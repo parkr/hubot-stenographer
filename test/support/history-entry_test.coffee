@@ -1,4 +1,6 @@
-HistoryEntry = require(require("path").join("..", "..", "src", "support", "history-entry"))
+Path         = require("path")
+rootDir      = Path.join("..", "..")
+HistoryEntry = require(Path.join(rootDir, "src", "support", "history-entry"))
 
 describe "HistoryEntry", ->
   room    = "jekyll"
@@ -40,4 +42,5 @@ describe "HistoryEntry", ->
   describe "toString", ->
     it "returns a lovely message", ->
       str = entry.toString()
-      assert.equal "parkr said 'Hi there!' at #{time.toUTCString()} in jekyll", str
+      timeUTC = time.toUTCString()
+      assert.equal "parkr said 'Hi there!' at #{timeUTC} in jekyll", str
