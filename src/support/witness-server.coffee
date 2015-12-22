@@ -36,15 +36,16 @@ class WitnessServer
       log("Response: #{chunk}")
 
   send: (event) ->
+    errhandler = @error
     @log "Sending message to #{@host}:#{@port}..."
     data = event.queryString()
     try
       log("Logging that #{event.toString()}")
       req = http.request httpOptsForData(data), @handle
-      req.on 'error', @error
+      req.on 'error', errhandler
       req.write(data)
       req.end()
     catch err
-      @error(err)
+      errhandler(err)
 
 module.exports = WitnessServer
